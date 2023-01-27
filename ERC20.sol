@@ -84,6 +84,9 @@ contract ERC20 is IERC20 {
         require(to != address(0), "Transfer to the address");
         _balances[msg.sender] -= amount;
         _balances[to] += amount;
+        /**
+         transfer code below
+         */
         emit Transfer(msg.sender, to, amount);
         return true;
     }
@@ -108,6 +111,9 @@ contract ERC20 is IERC20 {
     function approve(address spender, uint256 amount) public virtual override returns (bool) {
          require(spender != address(0), "It cannot be the zero.");
          _allowances[msg.sender][spender] = amount;
+         /**
+         transfer code below
+         */
          emit Approval(msg.sender, spender, amount); 
          return true;
     }
@@ -133,6 +139,9 @@ contract ERC20 is IERC20 {
          require(totalAllowance >= amount, "insufficient.");
          _balances[from] -= amount;
          _allowances[from][msg.sender] -= amount;
+         /**
+         transfer code below
+         */
          emit Transfer(from, to, amount);
          return true;
     }
@@ -195,13 +204,18 @@ contract ERC20 is IERC20 {
      * - `from` must have a balance of at least `amount`.
      */
     function _transfer(address from, address to, uint256 amount) internal virtual {
-       
+         /**
+         require logic below
+         */
          require(from != address(0), "transfer from address");
          require(to != address(0), "transfer to address");
          
          require(_balances[from] >= amount, "insufficient.");
          _balances[from] -= amount;
          _balances[to] += amount;
+         /**
+         transfer code below
+         */
          emit Transfer(from, to, amount);
     }
 
