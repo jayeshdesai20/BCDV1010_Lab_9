@@ -81,10 +81,11 @@ contract ERC20 is IERC20 {
      * - the caller must have a balance of at least `amount`.
      */
     function transfer(address to, uint256 amount) public virtual override returns (bool) {
-    
-         /* <------ Your code goes here ------->
-         */
-       
+        require(to != address(0), "Transfer to the address");
+        _balances[msg.sender] -= amount;
+        _balances[to] += amount;
+        emit Transfer(msg.sender, to, amount);
+        return true;
     }
 
     /**
@@ -105,8 +106,10 @@ contract ERC20 is IERC20 {
      * - `spender` cannot be the zero address.
      */
     function approve(address spender, uint256 amount) public virtual override returns (bool) {
-         /* <------ Your code goes here ------->
-         */
+         require(spender != address(0), "It cannot be the zero.");
+         _allowances[msg.sender][spender] = amount;
+         emit Approval(msg.sender, spender, amount); 
+         return true;
     }
 
     /**
@@ -126,8 +129,12 @@ contract ERC20 is IERC20 {
      * `amount`.
      */
     function transferFrom(address from, address to, uint256 amount) public virtual override returns (bool) {
-          /* <------ Your code goes here ------->
-         */
+         uint256 totalAllowance = _allowances[from][to];
+         require(totalAllowance >= amount, "insufficient.");
+         _balances[from] -= amount;
+         _allowances[from][msg.sender] -= amount;
+         emit Transfer(from, to, amount);
+         return true;
     }
 
     /**
@@ -189,8 +196,13 @@ contract ERC20 is IERC20 {
      */
     function _transfer(address from, address to, uint256 amount) internal virtual {
        
-         /* <------ Your code goes here ------->
-         */
+         require(from != address(0), "transfer from address");
+         require(to != address(0), "transfer to address");
+         
+         require(_balances[from] >= amount, "insufficient.");
+         _balances[from] -= amount;
+         _balances[to] += amount;
+         emit Transfer(from, to, amount);
     }
 
     /** @dev Creates `amount` tokens and assigns them to `account`, increasing
